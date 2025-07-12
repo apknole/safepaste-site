@@ -197,11 +197,16 @@
   <script>
     function sanitizeText() {
       let input = document.getElementById("inputText").value;
+      let fakeEmail = "user" + Math.floor(Math.random() * 10000) + "@example.com";
+      let fakePhone = "(555) 000-" + Math.floor(1000 + Math.random() * 9000);
+      let fakeCard = "4111 1111 1111 " + Math.floor(1000 + Math.random() * 9000);
+      let fakeSSN = Math.floor(100 + Math.random() * 900) + "-" + Math.floor(10 + Math.random() * 90) + "-" + Math.floor(1000 + Math.random() * 9000);
+
       let output = input
-        .replace(/([\w.-]+@[\w.-]+\.[a-zA-Z]{2,6})/g, "[REDACTED_EMAIL]")
-        .replace(/(\+?\d[\d\s\-().]{7,}\d)/g, "[REDACTED_PHONE]")
-        .replace(/\b(?:\d[ -]*?){13,16}\b/g, "[REDACTED_CARD]")
-        .replace(/\b\d{3}[- ]?\d{2}[- ]?\d{4}\b/g, "[REDACTED_SSN]");
+        .replace(/([\w.-]+@[\w.-]+\.[a-zA-Z]{2,6})/g, fakeEmail)
+        .replace(/(\+?\d[\d\s\-().]{7,}\d)/g, fakePhone)
+        .replace(/\b(?:\d[ -]*?){13,16}\b/g, fakeCard)
+        .replace(/\b\d{3}[- ]?\d{2}[- ]?\d{4}\b/g, fakeSSN);
       document.getElementById("outputText").value = output;
     }
 
