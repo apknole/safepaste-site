@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SafePaste™ – Safely Share Data with ChatGPT and Gemini</title>
-  <style>
+    <style>
     body {
       font-family: Arial, sans-serif;
       margin: 0;
@@ -80,6 +80,41 @@
       padding: 1rem;
       font-family: monospace;
       font-size: 1rem;
+    }
+    .button-group {
+      margin-top: 1rem;
+    }
+    .button-group button {
+      margin-right: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #keywordInput {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 1rem;
+    }
+    .tag-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .tag {
+      background-color: #e0e0e0;
+      padding: 0.4rem 0.75rem;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.9rem;
+    }
+    .tag button {
+      background: none;
+      border: none;
+      font-weight: bold;
+      margin-left: 0.5rem;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -177,11 +212,14 @@
 
     <section>
       <h2>🧪 Try It Yourself: Local-Only Demo</h2>
+      <h3>Add Custom Keywords to Redact</h3>
+      <small>Examples: AcmeCorp, ProjectX, Client123</small>
       <p>Paste any text into the box below. SafePaste™ will sanitize emails, phone numbers, Social Security numbers, and credit card-like patterns right in your browser. You can also define custom keywords (e.g., company names) to be redacted. Nothing ever leaves your device.</p>
       <textarea id="inputText" placeholder="Paste your text here..." rows="8"></textarea>
-      <input id="customKeywords" type="text" placeholder="Custom keywords to redact (comma-separated, e.g., Acme, ProjectX)" />
+      <input id="keywordInput" type="text" placeholder="Type keyword and press Enter" onkeydown="addKeyword(event)" />
+      <div class="tag-container" id="keywordTags"></div>
       <div class="button-group">
-        <button onclick="sanitizeText()">Sanitize</button>
+        <button onclick="copyOutput()">Copy Sanitized Text</button>
       </div>
       <h3 style="margin-top: 2rem;">Sanitized Output</h3>
       <textarea id="outputText" readonly rows="8" style="background-color: #f0f0f0;"></textarea>
@@ -198,10 +236,41 @@
   </main>
 
   <script>
+    const customKeywords = [];
+
+    function addKeyword(event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        const value = event.target.value.trim();
+        if (value && !customKeywords.includes(value.toLowerCase())) {
+          customKeywords.push(value.toLowerCase());
+          updateKeywordTags();
+        }
+        event.target.value = "";
+      }
+    }
+
+    function removeKeyword(keyword) {
+      const index = customKeywords.indexOf(keyword);
+      if (index > -1) {
+        customKeywords.splice(index, 1);
+        updateKeywordTags();
+      }
+    }
+
+    function updateKeywordTags() {
+      const container = document.getElementById("keywordTags");
+      container.innerHTML = "";
+      customKeywords.forEach(keyword => {
+        const tag = document.createElement("div");
+        tag.className = "tag";
+        tag.innerHTML = `${keyword} <button onclick="removeKeyword('${keyword}')">×</button>`;
+        container.appendChild(tag);
+      });
+    }
+
     function sanitizeText() {
       let input = document.getElementById("inputText").value;
-      let customInput = document.getElementById("customKeywords").value;
-      let customKeywords = customInput.split(',').map(k => k.trim()).filter(Boolean);
 
       let fakeEmail = "user" + Math.floor(Math.random() * 10000) + "@example.com";
       let fakePhone = "(555) 000-" + Math.floor(1000 + Math.random() * 9000);
@@ -226,7 +295,7 @@
     function copyOutput() {
       const outputText = document.getElementById("outputText");
       outputText.select();
-      outputText.setSelectionRange(0, 99999); // For mobile
+      outputText.setSelectionRange(0, 99999);
       document.execCommand("copy");
       alert("Sanitized text copied to clipboard!");
     }
