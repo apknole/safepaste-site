@@ -288,7 +288,8 @@
           .replace(/([\w.-]+@[\w.-]+\.[a-zA-Z]{2,6})/g, makeFake.email())
           .replace(/(\+?\d[\d\s\-().]{7,}\d)/g, makeFake.phone())
           .replace(/\b(?:\d[ -]*?){13,16}\b/g, makeFake.card())
-          .replace(/\b\d{3}[- ]?\d{2}[- ]?\d{4}\b/g, makeFake.ssn());
+          .replace(/\b\d{3}[- ]?\d{2}[- ]?\d{4}\b/g, makeFake.ssn())
+          .replace(/\b\d{4}-\d{2}-\d{2}\b/g, makeFake.dob());
 
         customKeywords.forEach(keyword => {
           const safeKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
