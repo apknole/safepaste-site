@@ -52,10 +52,6 @@
         <header class="text-center mb-8">
             <h1 class="text-3xl md:text-4xl font-bold text-gray-900">SafePaste™</h1>
             <p class="text-gray-600 mt-2">Redact sensitive information and custom keywords from your text or JSON data.</p>
-            <div class="mt-12 bg-indigo-50 border-l-4 border-indigo-500 p-6 rounded-r-lg">
-                <h4 class="font-bold text-lg text-indigo-900">🔐 Security by Design</h4>
-                <p class="text-indigo-800 mt-2">SafePaste™ never stores your data. Sanitization happens in your browser, ensuring that confidential information never leaves your device. Built with zero-trust principles from day one.</p>
-            </div>
         </header>
 
         <main class="bg-white p-6 rounded-lg shadow-lg">
@@ -89,6 +85,9 @@
                     <button onclick="copyOutput()" class="w-full sm:w-auto bg-gray-600 text-white font-semibold py-2 px-6 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors">
                         Copy Output
                     </button>
+                    <button onclick="clearInput()" class="w-full sm:w-auto bg-red-600 text-white font-semibold py-2 px-6 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors">
+                        Clear
+                    </button>
                 </div>
                 <div class="h-6 flex items-center">
                     <span id="copy-message" class="text-green-600 font-medium transition-opacity duration-300 opacity-0"></span>
@@ -98,6 +97,12 @@
 
         <!-- ALTERNATIVE MARKETING LAYOUT -->
         <section class="mt-12 text-gray-700">
+            <!-- MOVED: Security by Design section -->
+            <div class="mb-12 bg-indigo-50 border-l-4 border-indigo-500 p-6 rounded-r-lg">
+                <h4 class="font-bold text-lg text-indigo-900">🔐 Security by Design</h4>
+                <p class="text-indigo-800 mt-2">SafePaste™ never stores your data. Sanitization happens in your browser, ensuring that confidential information never leaves your device. Built with zero-trust principles from day one.</p>
+            </div>
+
             <div class="text-center">
                 <h2 class="text-2xl font-bold text-gray-900">🚫 Don't Risk Leaking Sensitive Data</h2>
                 <p class="max-w-2xl mx-auto mt-4">Using AI tools like ChatGPT and Gemini is powerful—but risky if you’re handling customer information or proprietary business data. SafePaste™ is your simple, secure solution.</p>
@@ -216,12 +221,11 @@
 
             const redactValue = (value) => {
                 if (typeof value !== 'string') return value;
-                // Regex for a common US address format. It's not perfect but covers many cases.
                 const addressRegex = /\b\d{1,5}\s[\w\s.,-]+\b,\s[\w\s.,-]+\b[A-Z]{2}\s\d{5}(-\d{4})?\b/g;
 
                 return value
                     .replace(/([\w.-]+@[\w.-]+\.[a-zA-Z]{2,6})/g, makeFake.email)
-                    .replace(addressRegex, makeFake.address) // Add address redaction
+                    .replace(addressRegex, makeFake.address)
                     .replace(/\b(?:\d[ -]*?){13,16}\b/g, makeFake.card)
                     .replace(/\b\d{3}[- ]?\d{2}[- ]?\d{4}\b/g, makeFake.ssn)
                     .replace(/\b\d{4}-\d{2}-\d{2}\b/g, makeFake.dob)
@@ -242,7 +246,6 @@
             const input = document.getElementById("inputText").value;
             let sanitizedText;
             
-            // Reset generated values for each run
             generatedValues = [];
 
             try {
@@ -290,6 +293,11 @@
             copyMessage.textContent = "Copied to clipboard!";
             copyMessage.classList.remove('opacity-0');
             setTimeout(() => { copyMessage.classList.add('opacity-0'); }, 2000);
+        }
+
+        function clearInput() {
+            document.getElementById('inputText').value = '';
+            document.getElementById('outputTextDisplay').innerHTML = '';
         }
     </script>
 </body>
