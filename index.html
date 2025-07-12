@@ -177,8 +177,9 @@
 
     <section>
       <h2>🧪 Try It Yourself: Local-Only Demo</h2>
-      <p>Paste any text into the box below. SafePaste™ will sanitize emails, phone numbers, Social Security numbers, and credit card-like patterns right in your browser. Nothing ever leaves your device.</p>
+      <p>Paste any text into the box below. SafePaste™ will sanitize emails, phone numbers, Social Security numbers, and credit card-like patterns right in your browser. You can also define custom keywords (e.g., company names) to be redacted. Nothing ever leaves your device.</p>
       <textarea id="inputText" placeholder="Paste your text here..." rows="8"></textarea>
+      <input id="customKeywords" type="text" placeholder="Custom keywords to redact (comma-separated, e.g., Acme, ProjectX)" />
       <div class="button-group">
         <button onclick="sanitizeText()">Sanitize</button>
       </div>
@@ -186,6 +187,7 @@
       <textarea id="outputText" readonly rows="8" style="background-color: #f0f0f0;"></textarea>
       <div class="button-group">
         <button onclick="copyOutput()">Copy Sanitized Text</button>
+      </div>
     </section>
 
     <section class="cta">
@@ -198,16 +200,26 @@
   <script>
     function sanitizeText() {
       let input = document.getElementById("inputText").value;
+      let customInput = document.getElementById("customKeywords").value;
+      let customKeywords = customInput.split(',').map(k => k.trim()).filter(Boolean);
+
       let fakeEmail = "user" + Math.floor(Math.random() * 10000) + "@example.com";
       let fakePhone = "(555) 000-" + Math.floor(1000 + Math.random() * 9000);
       let fakeCard = "4111 1111 1111 " + Math.floor(1000 + Math.random() * 9000);
       let fakeSSN = Math.floor(100 + Math.random() * 900) + "-" + Math.floor(10 + Math.random() * 90) + "-" + Math.floor(1000 + Math.random() * 9000);
 
       let output = input
-        .replace(/([\w.-]+@[\w.-]+\.[a-zA-Z]{2,6})/g, fakeEmail)
-        .replace(/(\+?\d[\d\s\-().]{7,}\d)/g, fakePhone)
-        .replace(/\b(?:\d[ -]*?){13,16}\b/g, fakeCard)
-        .replace(/\b\d{3}[- ]?\d{2}[- ]?\d{4}\b/g, fakeSSN);
+        .replace(/([\w.-]+@[\w.-]+\.[a-zA-Z]{2,6})/g, () => fakeEmail)
+        .replace(/(\+?\d[\d\s\-().]{7,}\d)/g, () => fakePhone)
+        .replace(/\b(?:\d[ -]*?){13,16}\b/g, () => fakeCard)
+        .replace(/\b\d{3}[- ]?\d{2}[- ]?\d{4}\b/g, () => fakeSSN);
+
+      customKeywords.forEach(keyword => {
+        const safeKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(safeKeyword, 'gi');
+        output = output.replace(regex, '[REDACTED_KEYWORD]');
+      });
+
       document.getElementById("outputText").value = output;
     }
 
