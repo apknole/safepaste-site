@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SafePaste™ – Share Smart with ChatGPT</title>
+  <title>SafePaste™ – Safely Share Data with ChatGPT and Gemini</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -75,6 +75,12 @@
     .cta a:hover {
       background-color: #005fa3;
     }
+    textarea {
+      width: 100%;
+      padding: 1rem;
+      font-family: monospace;
+      font-size: 1rem;
+    }
   </style>
 </head>
 <body>
@@ -86,7 +92,7 @@
   <main>
     <section>
       <h2>🚫 Don't Risk Leaking Sensitive Data</h2>
-      <p>Using AI tools like ChatGPT, Gemini, and Anthropic are powerful—but risky if you’re handling customer information, proprietary business data, or anything covered by confidentiality rules. That’s where SafePaste™ comes in.</p>
+      <p>Using AI tools like ChatGPT and Gemini are powerful—but risky if you’re handling customer information, proprietary business data, or anything covered by confidentiality rules. That’s where SafePaste™ comes in.</p>
       <p>Paste your content, sanitize it instantly, and share safely with AI tools.</p>
     </section>
 
@@ -103,7 +109,7 @@
     <section>
       <h2>👤 Who It's For</h2>
       <ul>
-        <li>Corporate Employees Using AI Tools</li>
+        <li>Corporate Employees Using ChatGPT</li>
         <li>Security-Conscious Teams</li>
         <li>Startups & SMEs</li>
       </ul>
@@ -120,6 +126,17 @@
     </section>
 
     <section>
+      <h2>🆚 How SafePaste™ Differs from the Competition</h2>
+      <p>While tools like Nightfall, Private AI, and Kong PII Anonymizer offer powerful enterprise solutions for data redaction, SafePaste™ is purpose-built for individuals and small teams who want a simple, browser-based way to safely use AI.</p>
+      <ul>
+        <li><strong>No installs or integrations:</strong> Just paste and sanitize right in your browser.</li>
+        <li><strong>Zero data storage:</strong> Everything happens locally—nothing is stored or sent.</li>
+        <li><strong>Made for AI workflows:</strong> Specifically designed to make ChatGPT usage safer in seconds.</li>
+        <li><strong>Affordable and accessible:</strong> No enterprise contracts, no overkill—just lightweight peace of mind.</li>
+      </ul>
+    </section>
+
+    <section>
       <h2>💰 Simple Pricing</h2>
       <table>
         <thead>
@@ -131,6 +148,12 @@
           </tr>
         </thead>
         <tbody>
+          <tr>
+            <td><strong>Free</strong></td>
+            <td>Individuals</td>
+            <td>Basic redaction of common PII</td>
+            <td>$0/month</td>
+          </tr>
           <tr>
             <td><strong>Pro</strong></td>
             <td>Power users & small teams</td>
@@ -147,7 +170,7 @@
             <td><strong>Enterprise</strong></td>
             <td>Enterprises</td>
             <td>SSO, custom AI policies, legal review mode</td>
-            <td>$50/user/month</td>
+            <td>Contact us</td>
           </tr>
         </tbody>
       </table>
@@ -158,11 +181,31 @@
       <p>SafePaste™ never stores your data. Sanitization happens in your browser, ensuring that confidential information never leaves your device. Built with zero-trust principles from day one.</p>
     </section>
 
+    <section>
+      <h2>🧪 Try It Yourself: Local-Only Demo</h2>
+      <p>Paste any text into the box below. SafePaste™ will sanitize emails, phone numbers, and credit card-like patterns right in your browser. Nothing ever leaves your device.</p>
+      <textarea id="inputText" placeholder="Paste your text here..." rows="8"></textarea>
+      <button onclick="sanitizeText()">Sanitize</button>
+      <h3 style="margin-top: 2rem;">Sanitized Output</h3>
+      <textarea id="outputText" readonly rows="8" style="background-color: #f0f0f0;"></textarea>
+    </section>
+
     <section class="cta">
       <h2>👇 Try It Now</h2>
       <a href="#">Launch the App</a>
       <a href="#">Contact Sales</a>
     </section>
   </main>
+
+  <script>
+    function sanitizeText() {
+      let input = document.getElementById("inputText").value;
+      let output = input
+        .replace(/([\w.-]+@[\w.-]+\.[a-zA-Z]{2,6})/g, "[REDACTED_EMAIL]")
+        .replace(/(\+?\d[\d\s\-().]{7,}\d)/g, "[REDACTED_PHONE]")
+        .replace(/\b(?:\d[ -]*?){13,16}\b/g, "[REDACTED_CARD]");
+      document.getElementById("outputText").value = output;
+    }
+  </script>
 </body>
 </html>
