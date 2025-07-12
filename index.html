@@ -212,12 +212,12 @@
 
     <section>
       <h2>🧪 Try It Yourself: Local-Only Demo</h2>
+      <p>Paste any text into the box below. SafePaste™ will sanitize emails, phone numbers, Social Security numbers, and credit card-like patterns right in your browser. You can also define custom keywords (e.g., company names) to be redacted. Nothing ever leaves your device.</p>
       <h3>Add Custom Keywords to Redact</h3>
       <small>Examples: AcmeCorp, ProjectX, Client123</small>
-      <p>Paste any text into the box below. SafePaste™ will sanitize emails, phone numbers, Social Security numbers, and credit card-like patterns right in your browser. You can also define custom keywords (e.g., company names) to be redacted. Nothing ever leaves your device.</p>
-      <textarea id="inputText" placeholder="Paste your text here..." rows="8"></textarea>
       <input id="keywordInput" type="text" placeholder="Type keyword and press Enter" onkeydown="addKeyword(event)" />
       <div class="tag-container" id="keywordTags"></div>
+      <textarea id="inputText" placeholder="Paste your text here..." rows="8"></textarea>
       <div class="button-group">
         <button onclick="copyOutput()">Copy Sanitized Text</button>
       </div>
