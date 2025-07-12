@@ -275,24 +275,49 @@
     function sanitizeText() {
       let input = document.getElementById("inputText").value;
 
-      let fakeEmail = "user" + Math.floor(Math.random() * 10000) + "@example.com";
-      let fakePhone = "(555) 000-" + Math.floor(1000 + Math.random() * 9000);
-      let fakeCard = "4111 1111 1111 " + Math.floor(1000 + Math.random() * 9000);
-      let fakeSSN = Math.floor(100 + Math.random() * 900) + "-" + Math.floor(10 + Math.random() * 90) + "-" + Math.floor(1000 + Math.random() * 9000);
+      const makeFake = {
+        email: () => `user${Math.floor(Math.random() * 10000)}@example.com`,
+        phone: () => `(555) 000-${Math.floor(1000 + Math.random() * 9000)}`,
+        card: () => `4111 1111 1111 ${Math.floor(1000 + Math.random() * 9000)}`,
+        ssn: () => `${Math.floor(100 + Math.random() * 900)}-${Math.floor(10 + Math.random() * 90)}-${Math.floor(1000 + Math.random() * 9000)}`,
+      };
 
-      let output = input
-        .replace(/([\w.-]+@[\w.-]+\.[a-zA-Z]{2,6})/g, () => fakeEmail)
-        .replace(/(\+?\d[\d\s\-().]{7,}\d)/g, () => fakePhone)
-        .replace(/\b(?:\d[ -]*?){13,16}\b/g, () => fakeCard)
-        .replace(/\b\d{3}[- ]?\d{2}[- ]?\d{4}\b/g, () => fakeSSN);
+      const redactValue = (value) => {
+        if (typeof value !== 'string') return value;
+        let result = value
+          .replace(/([\w.-]+@[\w.-]+\.[a-zA-Z]{2,6})/g, makeFake.email())
+          .replace(/(\+?\d[\d\s\-().]{7,}\d)/g, makeFake.phone())
+          .replace(/\b(?:\d[ -]*?){13,16}\b/g, makeFake.card())
+          .replace(/\b\d{3}[- ]?\d{2}[- ]?\d{4}\b/g, makeFake.ssn());
 
-      customKeywords.forEach(keyword => {
-        const safeKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const regex = new RegExp(safeKeyword, 'gi');
-        output = output.replace(regex, '[REDACTED_KEYWORD]');
-      });
+        customKeywords.forEach(keyword => {
+          const safeKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          const regex = new RegExp(safeKeyword, 'gi');
+          result = result.replace(regex, '[REDACTED_KEYWORD]');
+        });
+        return result;
+      };
 
-      document.getElementById("outputText").value = output;
+      const sanitizeJSON = (obj) => {
+        if (Array.isArray(obj)) return obj.map(sanitizeJSON);
+        if (obj && typeof obj === 'object') {
+          const clean = {};
+          for (let key in obj) {
+            clean[key] = sanitizeJSON(obj[key]);
+          }
+          return clean;
+        }
+        return redactValue(obj);
+      };
+
+      try {
+        const parsed = JSON.parse(input);
+        const sanitized = sanitizeJSON(parsed);
+        document.getElementById("outputText").value = JSON.stringify(sanitized, null, 2);
+      } catch (e) {
+        const fallback = redactValue(input);
+        document.getElementById("outputText").value = fallback;
+      }
     }
 
     function copyOutput() {
