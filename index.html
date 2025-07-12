@@ -177,9 +177,12 @@
 
     <section>
       <h2>🧪 Try It Yourself: Local-Only Demo</h2>
-      <p>Paste any text into the box below. SafePaste™ will sanitize emails, phone numbers, and credit card-like patterns right in your browser. Nothing ever leaves your device.</p>
+      <p>Paste any text into the box below. SafePaste™ will sanitize emails, phone numbers, Social Security numbers, and credit card-like patterns right in your browser. Nothing ever leaves your device.</p>
       <textarea id="inputText" placeholder="Paste your text here..." rows="8"></textarea>
-      <button onclick="sanitizeText()">Sanitize</button>
+      <div class="button-group">
+        <button onclick="sanitizeText()">Sanitize</button>
+        <button onclick="copyOutput()">Copy Sanitized Text</button>
+      </div>
       <h3 style="margin-top: 2rem;">Sanitized Output</h3>
       <textarea id="outputText" readonly rows="8" style="background-color: #f0f0f0;"></textarea>
     </section>
@@ -197,8 +200,17 @@
       let output = input
         .replace(/([\w.-]+@[\w.-]+\.[a-zA-Z]{2,6})/g, "[REDACTED_EMAIL]")
         .replace(/(\+?\d[\d\s\-().]{7,}\d)/g, "[REDACTED_PHONE]")
-        .replace(/\b(?:\d[ -]*?){13,16}\b/g, "[REDACTED_CARD]");
+        .replace(/\b(?:\d[ -]*?){13,16}\b/g, "[REDACTED_CARD]")
+        .replace(/\b\d{3}[- ]?\d{2}[- ]?\d{4}\b/g, "[REDACTED_SSN]");
       document.getElementById("outputText").value = output;
+    }
+
+    function copyOutput() {
+      const outputText = document.getElementById("outputText");
+      outputText.select();
+      outputText.setSelectionRange(0, 99999); // For mobile
+      document.execCommand("copy");
+      alert("Sanitized text copied to clipboard!");
     }
   </script>
 </body>
