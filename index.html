@@ -66,7 +66,8 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label for="inputText" class="block text-sm font-medium text-gray-700">Input Text</label>
-                    <textarea id="inputText" rows="12" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Paste your text or JSON here..."></textarea>
+                    <!-- UPDATED: Added a dashed border to the input textarea -->
+                    <textarea id="inputText" rows="12" class="mt-1 block w-full rounded-md border-2 border-dashed border-gray-300 p-4 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 sm:text-sm transition" placeholder="Paste your text or JSON here..."></textarea>
                 </div>
                 <div>
                     <label for="outputTextDisplay" class="block text-sm font-medium text-gray-700">Sanitized Output</label>
@@ -97,7 +98,7 @@
 
         <!-- ALTERNATIVE MARKETING LAYOUT -->
         <section class="mt-12 text-gray-700">
-            <!-- MOVED: Security by Design section -->
+            <!-- Security by Design section -->
             <div class="mb-12 bg-indigo-50 border-l-4 border-indigo-500 p-6 rounded-r-lg">
                 <h4 class="font-bold text-lg text-indigo-900">🔐 Security by Design</h4>
                 <p class="text-indigo-800 mt-2">SafePaste™ never stores your data. Sanitization happens in your browser, ensuring that confidential information never leaves your device. Built with zero-trust principles from day one.</p>
@@ -207,7 +208,7 @@
         }
 
         function sanitizeText() {
-            let generatedValues = []; // Keep track of fake data to highlight it later
+            let generatedValues = []; 
             const outputDisplay = document.getElementById('outputTextDisplay');
 
             const makeFake = {
